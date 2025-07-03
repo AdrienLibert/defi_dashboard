@@ -1,19 +1,26 @@
-// main.rs
-use reqwest::Client;
-use serde::{Deserialize, Serialize};
-use std::env;
+mod api;
+
+use anyhow::Result;
 use dotenv::dotenv;
-use chrono::{DateTime, Utc};
-use tokio::fs::File;
-use csv::Writer;
+use api::client::Client;
+
+const TEST_DUNE_QUERY_ID: u32 = 5375052;
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    // Load environment variables from .env file
+async fn main() -> Result<()> {
     dotenv().ok();
 
-    // Get the Dune API key from environment variables
-    let dune_api_key = env::var("DUNE_API_KEY")
-        .expect("DUNE_API_KEY must be set in .env file");
+    let api_key = std::env::var("API_KEY").expect("DUNE_API_KEY must be set in .env file");
+    let dune_client = Client::new(api_key);
+    
+    match dune_client.get_cached_query_results(TEST_DUNE_QUERY_ID, Some(10), None).await {
+        Ok(json_string) => {
+            println!("{}", json_string);
+        },
+        Err(e) => {
+            eprintln!("Error: {:?}", e);
+        }
+    }
+
     Ok(())
 }
