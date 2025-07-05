@@ -1,7 +1,7 @@
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use chrono::{DateTime, Utc};
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct DuneQueryRow {
     pub block_time: DateTime<Utc>,
     pub from: String,

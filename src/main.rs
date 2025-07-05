@@ -3,6 +3,7 @@ mod api;
 use anyhow::Result;
 use dotenv::dotenv;
 use api::client::Client;
+use api::helper::write_dune_rows_to_csv;
 
 const QUERY_ID: u32 = 0;
 
@@ -19,6 +20,8 @@ async fn main() -> Result<()> {
             if records.is_empty() {
                 println!("No records found.");
             } else {
+                let output_csv_path = "results.csv";
+                write_dune_rows_to_csv(&records, output_csv_path).await?;
                 println!("\n--- Parsed Data ---");
                 println!("{: <25} | {: <42} | {: <42} | {: <20} | {: <10}",
                          "block_time", "from", "to", "formatted_value", "blockchain");
