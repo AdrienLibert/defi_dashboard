@@ -1,0 +1,45 @@
+{
+  "type": "record",
+  "name": "UniswapTrade",
+  "fields": [
+    {
+      "name": "block_time",
+      "type": {
+        "type": "long",
+        "logicalType": "timestamp-millis"
+      }
+    },
+    {
+      "name": "token_pair",
+      "type": "string"
+    },
+    {
+      "name": "token_bought_symbol",
+      "type": "string"
+    },
+    {
+      "name": "token_sold_symbol",
+      "type": "string"
+    },
+    {
+      "name": "total_bought_amount",
+      "type": "double"
+    },
+    {
+      "name": "total_sold_amount",
+      "type": "double"
+    },
+    {
+      "name": "total_volume_usd",
+      "type": "double"
+    },
+    {
+      "name": "project_contract_address",
+      "type": "string"
+    },
+    {
+      "name": "swap_count",
+      "type": "long"
+    }
+  ]
+}

@@ -3,9 +3,9 @@ mod api;
 use anyhow::Result;
 use dotenv::dotenv;
 use api::client::Client;
-use api::helper::write_dune_rows_to_csv;
+use api::helper::save_to_avro;
 
-const QUERY_ID: u32 = 0;
+const QUERY_ID: u32 = 5375052;
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -20,21 +20,8 @@ async fn main() -> Result<()> {
             if records.is_empty() {
                 println!("No records found.");
             } else {
-                let output_csv_path = "results.csv";
-                write_dune_rows_to_csv(&records, output_csv_path).await?;
-                println!("\n--- Parsed Data ---");
-                println!("{: <25} | {: <42} | {: <42} | {: <20} | {: <10}",
-                         "block_time", "from", "to", "formatted_value", "blockchain");
-                println!("{}", "-".repeat(150));
-
-                for record in records {
-                    println!("{: <25} | {: <42} | {: <42} | {: <20.10e} | {: <10}",
-                             record.block_time.format("%Y-%m-%d %H:%M:%S UTC"),
-                             record.from,
-                             record.to,
-                             record.formatted_value,
-                             record.blockchain);
-                }
+                let avro_file_path = "./avro_data/query_results.avro";
+                save_to_avro(&records, avro_file_path).await?;
             }
         },
         Err(e) => {

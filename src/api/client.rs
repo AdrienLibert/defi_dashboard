@@ -32,9 +32,7 @@ impl Client {
                 query_pairs.append_pair("offset", &o.to_string());
             }
         }
-
         println!("Requesting URL: {}", url.as_str());
-
         let response = self.client.get(url.as_str())
             .header("X-Dune-Api-Key", &self.api_key)
             .send()
