@@ -1,9 +1,7 @@
-mod api;
-
 use anyhow::Result;
 use dotenv::dotenv;
-use api::client::Client;
-use api::helper::save_to_avro;
+use defi_data_pipeline::library::helper::save_to_avro;
+use defi_data_pipeline::library::client::Client;
 
 const QUERY_ID: u32 = 5375052;
 

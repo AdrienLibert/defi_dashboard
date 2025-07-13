@@ -1,20 +1,9 @@
 use anyhow::Result;
 use std::fs::{File, read_to_string};
-use std::io::BufWriter;
-use apache_avro::{Schema, Writer};
-//use serde::{Deserialize, Deserializer};
-//use chrono::{DateTime, Utc, prelude::*};
-use crate::api::models::DuneQueryRow;
-
-/*fn deserialize_block_time<'de, D>(deserializer: D) -> Result<DateTime<Utc>, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    let s = String::deserialize(deserializer)?;
-    Utc.datetime_from_str(&s, "%Y-%m-%d %H:%M:%S%.3f UTC")
-        .map_err(serde::de::Error::custom)
-}
-*/
+use std::io::{BufWriter, BufReader};
+use apache_avro::{Schema, Writer, Reader};
+use std::path::Path;
+use crate::library::models::DuneQueryRow;
 
 pub async fn save_to_avro(rows: &[DuneQueryRow], file_path: &str) -> Result<()> {
     let schema_path = "./schemas/uniswap_trade_schema.json";
@@ -32,4 +21,19 @@ pub async fn save_to_avro(rows: &[DuneQueryRow], file_path: &str) -> Result<()> 
     writer.flush()?; 
     println!("\nData successfully written to Avro file: {}", file_path);
     Ok(())
+}
+
+pub async fn read_from_avro<P: AsRef<Path>>(file_path: P) -> Result<Vec<DuneQueryRow>> {
+    let file = File::open(file_path)?;
+    let reader = BufReader::new(file);
+
+    let avro_reader = Reader::new(reader)?;
+    let mut rows = Vec::new();
+    for value in avro_reader {
+        let row = apache_avro::from_value::<DuneQueryRow>(&value?)?;
+        rows.push(row);
+    }
+
+    println!("Successfully read {} rows from Avro file", rows.len());
+    Ok(rows)
 }

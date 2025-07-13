@@ -4,7 +4,7 @@ use csv::ReaderBuilder;
 use std::io::Cursor;
 use url::Url;
 
-use crate::api::models::DuneQueryRow;
+use crate::library::models::DuneQueryRow;
 const API_URL: &str = "https://api.dune.com/api/v1";
 
 pub struct Client {
@@ -39,7 +39,7 @@ impl Client {
             .await?;
 
         let status = response.status();
-        let response_text = response.text().await?; // Read body once
+        let response_text = response.text().await?;
 
         println!("\n--- Raw CACHED RESULTS Response for Query ID: {} ---\n{}", query_id, response_text);
 

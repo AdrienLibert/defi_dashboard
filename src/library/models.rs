@@ -21,8 +21,7 @@ where
 
 #[derive(Debug, Deserialize, Clone, Serialize)]
 pub struct DuneQueryRow {
-    #[serde(deserialize_with = "deserialize_block_time")]
-    #[serde(serialize_with = "serialize_block_time_to_avro")]
+    #[serde(with = "chrono::serde::ts_milliseconds")]
     pub block_time: DateTime<Utc>,
     pub token_pair: String,
     pub token_bought_symbol: String,
